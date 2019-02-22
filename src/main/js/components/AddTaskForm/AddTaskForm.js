@@ -17,9 +17,11 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 export default function AddTaskForm(props) {
+    const { handleTaskSubmit } = props;
     return (
         <Form
             id="new-task-form"
+            onSubmit={handleTaskSubmit}
             className="w-75 mx-auto"
         >
             <FormGroup>
@@ -29,8 +31,8 @@ export default function AddTaskForm(props) {
                     <Input
                         required
                         bsSize="lg"
-                        id="task-text"
-                        name="task"
+                        id="description"
+                        name="description"
                         placeholder="Enter a new task"
                         className="rounded-0"
                     />

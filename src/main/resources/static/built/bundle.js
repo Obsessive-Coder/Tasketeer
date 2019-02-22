@@ -55443,9 +55443,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -55458,6 +55458,10 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
  // Custom components.
 
 
+
+var follow = __webpack_require__(/*! ./follow */ "./src/main/js/follow.js");
+
+var root = '/api';
 
 var App =
 /*#__PURE__*/
@@ -55473,27 +55477,125 @@ function (_React$Component) {
     _this.state = {
       tasks: []
     };
+    _this.onNavigate = _this.onNavigate.bind(_assertThisInitialized(_this));
+    _this.handleTaskSubmit = _this.handleTaskSubmit.bind(_assertThisInitialized(_this));
+    _this.handleTaskDelete = _this.handleTaskDelete.bind(_assertThisInitialized(_this));
+    _this.onCreateTask = _this.onCreateTask.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(App, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
+    key: "loadFromServer",
+    value: function loadFromServer(pageSize) {
       var _this2 = this;
+
+      follow(_client__WEBPACK_IMPORTED_MODULE_2___default.a, root, [{
+        rel: 'tasks',
+        params: {
+          size: pageSize
+        }
+      }]).then(function (taskCollection) {
+        return _client__WEBPACK_IMPORTED_MODULE_2___default()({
+          method: 'GET',
+          path: taskCollection.entity._links.profile.href,
+          headers: {
+            'Accept': 'application/schema+json'
+          }
+        }).then(function (schema) {
+          _this2.schema = schema.entity;
+          return taskCollection;
+        });
+      }).done(function (taskCollection) {
+        _this2.setState({
+          tasks: taskCollection.entity._embedded.tasks,
+          attributes: Object.keys(_this2.schema.properties),
+          pageSize: pageSize,
+          links: taskCollection.entity._links
+        });
+      });
+    }
+  }, {
+    key: "onNavigate",
+    value: function onNavigate(navUri) {
+      var _this3 = this;
 
       _client__WEBPACK_IMPORTED_MODULE_2___default()({
         method: 'GET',
-        path: '/api/tasks'
-      }).done(function (response) {
-        var tasks = response.entity._embedded.tasks;
-        tasks.forEach(function (task) {
-          return task.isBeingEdited = false;
-        });
+        path: navUri
+      }).done(function (taskCollection) {
+        var _this3$state = _this3.state,
+            attributes = _this3$state.attributes,
+            pageSize = _this3$state.pageSize;
+        var entity = taskCollection.entity;
 
-        _this2.setState({
-          tasks: tasks
+        _this3.setState({
+          tasks: entity._embedded.tasks,
+          attributes: attributes,
+          pageSize: pageSize,
+          links: entity._links
         });
       });
+    }
+  }, {
+    key: "handleTaskSubmit",
+    value: function handleTaskSubmit(e) {
+      e.preventDefault();
+      var newTask = {
+        description: e.target.description.value.trim(),
+        isComplete: false
+      };
+      this.onCreateTask(newTask);
+      e.target.description.value = '';
+    }
+  }, {
+    key: "handleTaskDelete",
+    value: function handleTaskDelete(task) {
+      var _this4 = this;
+
+      _client__WEBPACK_IMPORTED_MODULE_2___default()({
+        method: 'DELETE',
+        path: task._links.self.href
+      }).done(function (response) {
+        _this4.loadFromServer(_this4.state.pageSize);
+      });
+    }
+  }, {
+    key: "onCreateTask",
+    value: function onCreateTask(newTask) {
+      var _this5 = this;
+
+      follow(_client__WEBPACK_IMPORTED_MODULE_2___default.a, root, ['tasks']).then(function (taskCollection) {
+        return _client__WEBPACK_IMPORTED_MODULE_2___default()({
+          method: 'POST',
+          path: taskCollection.entity._links.self.href,
+          entity: newTask,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+      }).then(function (response) {
+        return follow(_client__WEBPACK_IMPORTED_MODULE_2___default.a, root, [{
+          rel: 'tasks',
+          params: {
+            'size': _this5.state.pageSize
+          }
+        }]);
+      }).done(function (response) {
+        var _links = response.entity._links;
+        var link = _links.self.href;
+
+        if (typeof _links.last !== 'undefined') {
+          link = _links.last.href;
+        }
+
+        _this5.onNavigate(link);
+      });
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var pageSize = this.state.pageSize;
+      this.loadFromServer(pageSize);
     }
   }, {
     key: "render",
@@ -55503,8 +55605,11 @@ function (_React$Component) {
         className: "app text-center"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("header", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Tasketeer")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("main", {
         className: "py-5 text-center"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components__WEBPACK_IMPORTED_MODULE_4__["AddTaskForm"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components__WEBPACK_IMPORTED_MODULE_4__["TaskList"], {
-        tasks: tasks
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components__WEBPACK_IMPORTED_MODULE_4__["AddTaskForm"], {
+        handleTaskSubmit: this.handleTaskSubmit
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components__WEBPACK_IMPORTED_MODULE_4__["TaskList"], {
+        tasks: tasks,
+        onTaskDelete: this.handleTaskDelete
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("footer", null));
     }
   }]);
@@ -55573,16 +55678,18 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function AddTaskForm(props) {
+  var handleTaskSubmit = props.handleTaskSubmit;
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Form"], {
     id: "new-task-form",
+    onSubmit: handleTaskSubmit,
     className: "w-75 mx-auto"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["FormGroup"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["InputGroup"], {
     size: "lg"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Input"], {
     required: true,
     bsSize: "lg",
-    id: "task-text",
-    name: "task",
+    id: "description",
+    name: "description",
     placeholder: "Enter a new task",
     className: "rounded-0"
   }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["InputGroupAddon"], {
@@ -55644,7 +55751,8 @@ __webpack_require__.r(__webpack_exports__);
 
 function Task(props) {
   var task = props.task,
-      index = props.index;
+      index = props.index,
+      onDelete = props.onDelete;
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["ListGroupItem"], {
     className: "d-flex p-0 mb-1 rounded-0"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["InputGroup"], {
@@ -55690,6 +55798,9 @@ function Task(props) {
   })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
     outline: true,
     color: "danger",
+    onClick: function onClick() {
+      return onDelete(task);
+    },
     className: "rounded-0 edit-button"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_2__["FontAwesomeIcon"], {
     icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_3__["faTrashAlt"],
@@ -55767,12 +55878,15 @@ function (_Component) {
   _createClass(TaskList, [{
     key: "render",
     value: function render() {
-      var tasks = this.props.tasks;
+      var _this$props = this.props,
+          tasks = _this$props.tasks,
+          onTaskDelete = _this$props.onTaskDelete;
       var taskComponents = tasks.map(function (task, index) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(___WEBPACK_IMPORTED_MODULE_2__["Task"], {
           key: task._links.self.href,
           idex: index,
-          task: task
+          task: task,
+          onDelete: onTaskDelete
         });
       });
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["ListGroup"], null, taskComponents);
@@ -55831,6 +55945,55 @@ __webpack_require__.r(__webpack_exports__);
   Task: _Task__WEBPACK_IMPORTED_MODULE_1__["default"],
   AddTaskForm: _AddTaskForm__WEBPACK_IMPORTED_MODULE_2__["default"]
 });
+
+/***/ }),
+
+/***/ "./src/main/js/follow.js":
+/*!*******************************!*\
+  !*** ./src/main/js/follow.js ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = function follow(api, rootPath, relArray) {
+  var root = api({
+    method: 'GET',
+    path: rootPath
+  });
+  return relArray.reduce(function (root, arrayItem) {
+    var rel = typeof arrayItem === 'string' ? arrayItem : arrayItem.rel;
+    return traverseNext(root, rel, arrayItem);
+  }, root);
+
+  function traverseNext(root, rel, arrayItem) {
+    return root.then(function (response) {
+      if (hasEmbeddedRel(response.entity, rel)) {
+        return response.entity._embedded[rel];
+      }
+
+      if (!response.entity._links) {
+        return [];
+      }
+
+      if (typeof arrayItem === 'string') {
+        return api({
+          method: 'GET',
+          path: response.entity._links[rel].href
+        });
+      } else {
+        return api({
+          method: 'GET',
+          path: response.entity._links[rel].href,
+          params: arrayItem.params
+        });
+      }
+    });
+  }
+
+  function hasEmbeddedRel(entity, rel) {
+    return entity._embedded && entity._embedded.hasOwnProperty(rel);
+  }
+};
 
 /***/ }),
 

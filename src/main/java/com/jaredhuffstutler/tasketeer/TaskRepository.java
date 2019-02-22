@@ -1,8 +1,8 @@
 package com.jaredhuffstutler.tasketeer;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;;
 
 /**
  * @author Jared Huffstutler
  */
-public interface TaskRepository extends CrudRepository<Task, Long> {}
+public interface TaskRepository extends PagingAndSortingRepository<Task, Long> {}

@@ -23,7 +23,7 @@ import {
 } from '@fortawesome/free-regular-svg-icons';
 
 export default function Task(props) {
-    const { task, index } = props;
+    const { task, index, onDelete } = props;
 
     return (
         <ListGroupItem
@@ -97,6 +97,7 @@ export default function Task(props) {
                 <Button
                     outline
                     color="danger"
+                    onClick={() => onDelete(task)}
                     className="rounded-0 edit-button"
                 >
                     <FontAwesomeIcon

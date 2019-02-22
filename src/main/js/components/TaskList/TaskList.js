@@ -8,12 +8,13 @@ import { Task } from '../';
 
 class TaskList extends Component {
     render() {
-        const { tasks } = this.props;
+        const { tasks, onTaskDelete } = this.props;
         const taskComponents = tasks.map((task, index) => (
             <Task
                 key={task._links.self.href}
                 idex={index}
                 task={task}
+                onDelete={onTaskDelete}
             />
         ));
 
