@@ -41,7 +41,7 @@ class App extends React.Component {
                     <h1>Tasketeer</h1>
                 </header>
                 <main
-                    className="p-5"
+                    className="py-5"
                 >
                     <AddTaskForm
                         className="mx-auto"

@@ -55502,7 +55502,7 @@ function (_React$Component) {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Container"], {
         className: "app text-center"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("header", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Tasketeer")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("main", {
-        className: "p-5"
+        className: "py-5"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components__WEBPACK_IMPORTED_MODULE_4__["AddTaskForm"], {
         className: "mx-auto"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components__WEBPACK_IMPORTED_MODULE_4__["TaskList"], {
@@ -55778,9 +55778,7 @@ function (_Component) {
           task: task
         });
       });
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["ListGroup"], {
-        className: "m-5"
-      }, taskComponents);
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["ListGroup"], null, taskComponents);
     }
   }]);
 

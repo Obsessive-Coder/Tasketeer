@@ -18,9 +18,7 @@ class TaskList extends Component {
         ));
 
         return (
-            <ListGroup
-                className="m-5"
-            >
+            <ListGroup>
                 {taskComponents}
             </ListGroup>
         );
