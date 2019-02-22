@@ -36,10 +36,12 @@ export default function Task(props) {
                         {task.isComplete ? (
                             <FontAwesomeIcon
                                 icon={faCheckSquare}
+                                size="lg"
                             />
                         ) : (
                                 <FontAwesomeIcon
                                     icon={faSquare}
+                                    size="lg"
                                 />
                             )}
                     </CompleteButton>
@@ -61,6 +63,7 @@ export default function Task(props) {
                     >
                         <FontAwesomeIcon
                             icon={faCheck}
+                            size="lg"
                         />
                     </button>
                 )}
@@ -70,10 +73,12 @@ export default function Task(props) {
                     {task.isBeingEdited ? (
                         <FontAwesomeIcon
                             icon={faTimes}
+                            size="lg"
                         />
                     ) : (
                             <FontAwesomeIcon
                                 icon={faPen}
+                                size="lg"
                             />
                         )}
                 </button>
@@ -82,6 +87,7 @@ export default function Task(props) {
                 >
                     <FontAwesomeIcon
                         icon={faTrashAlt}
+                        size="lg"
                     />
                 </button>
             </div>

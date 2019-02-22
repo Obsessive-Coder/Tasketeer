@@ -33,6 +33,7 @@ export default function AddTaskForm(props) {
                     >
                         <FontAwesomeIcon
                             icon={faPlus}
+                            size="lg"
                         />
                     </button>
                 </div>
