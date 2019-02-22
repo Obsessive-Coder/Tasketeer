@@ -5,7 +5,10 @@ const ReactDOM = require('react-dom');
 const client = require('./client');
 
 // Custom components.
-import { TaskList } from './components';
+import {
+    AddTaskForm,
+    TaskList
+} from './components';
 
 class App extends React.Component {
 
@@ -35,13 +38,15 @@ class App extends React.Component {
                 <main
                     className="p-5"
                 >
+                    <AddTaskForm
+                        className="mx-auto"
+                    />
                     <TaskList
                         tasks={tasks}
                     />
                 </main>
                 <footer></footer>
             </div>
-
         )
     }
 }
