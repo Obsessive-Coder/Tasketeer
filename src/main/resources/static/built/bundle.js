@@ -55619,46 +55619,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./src/main/js/components/CompleteButton/CompleteButton.js":
-/*!*****************************************************************!*\
-  !*** ./src/main/js/components/CompleteButton/CompleteButton.js ***!
-  \*****************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return CompleteButton; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-
-function CompleteButton(props) {
-  var className = props.className,
-      children = props.children;
-  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-    className: "btn btn-outline-success rounded-0 " + className
-  }, children);
-}
-;
-
-/***/ }),
-
-/***/ "./src/main/js/components/CompleteButton/index.js":
-/*!********************************************************!*\
-  !*** ./src/main/js/components/CompleteButton/index.js ***!
-  \********************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _CompleteButton__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CompleteButton */ "./src/main/js/components/CompleteButton/CompleteButton.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _CompleteButton__WEBPACK_IMPORTED_MODULE_0__["default"]; });
-
-
-
-/***/ }),
-
 /***/ "./src/main/js/components/Task/Task.js":
 /*!*********************************************!*\
   !*** ./src/main/js/components/Task/Task.js ***!
@@ -55675,14 +55635,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @fortawesome/react-fontawesome */ "./node_modules/@fortawesome/react-fontawesome/index.es.js");
 /* harmony import */ var _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @fortawesome/free-solid-svg-icons */ "./node_modules/@fortawesome/free-solid-svg-icons/index.es.js");
 /* harmony import */ var _fortawesome_free_regular_svg_icons__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @fortawesome/free-regular-svg-icons */ "./node_modules/@fortawesome/free-regular-svg-icons/index.es.js");
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../ */ "./src/main/js/components/index.js");
  // Reactstrap components.
 
  // Font Awesome components.
 
 
-
- // Custom components.
 
 
 function Task(props) {
@@ -55694,9 +55651,10 @@ function Task(props) {
     className: "input-group input-group-lg"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "input-group-prepend"
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(___WEBPACK_IMPORTED_MODULE_5__["CompleteButton"], {
-    index: index,
-    className: "edit-button"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+    outline: true,
+    color: "success",
+    className: "rounded-0 edit-button"
   }, task.isComplete ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_2__["FontAwesomeIcon"], {
     icon: _fortawesome_free_regular_svg_icons__WEBPACK_IMPORTED_MODULE_4__["faCheckSquare"],
     size: "lg"
@@ -55842,7 +55800,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!*****************************************!*\
   !*** ./src/main/js/components/index.js ***!
   \*****************************************/
-/*! exports provided: TaskList, Task, CompleteButton, AddTaskForm, default */
+/*! exports provided: TaskList, Task, AddTaskForm, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -55853,13 +55811,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Task__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Task */ "./src/main/js/components/Task/index.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Task", function() { return _Task__WEBPACK_IMPORTED_MODULE_1__["default"]; });
 
-/* harmony import */ var _CompleteButton__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CompleteButton */ "./src/main/js/components/CompleteButton/index.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CompleteButton", function() { return _CompleteButton__WEBPACK_IMPORTED_MODULE_2__["default"]; });
-
-/* harmony import */ var _AddTaskForm__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./AddTaskForm */ "./src/main/js/components/AddTaskForm/index.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AddTaskForm", function() { return _AddTaskForm__WEBPACK_IMPORTED_MODULE_3__["default"]; });
-
-
+/* harmony import */ var _AddTaskForm__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AddTaskForm */ "./src/main/js/components/AddTaskForm/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AddTaskForm", function() { return _AddTaskForm__WEBPACK_IMPORTED_MODULE_2__["default"]; });
 
 
 
@@ -55870,8 +55823,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   TaskList: _TaskList__WEBPACK_IMPORTED_MODULE_0__["default"],
   Task: _Task__WEBPACK_IMPORTED_MODULE_1__["default"],
-  CompleteButton: _CompleteButton__WEBPACK_IMPORTED_MODULE_2__["default"],
-  AddTaskForm: _AddTaskForm__WEBPACK_IMPORTED_MODULE_3__["default"]
+  AddTaskForm: _AddTaskForm__WEBPACK_IMPORTED_MODULE_2__["default"]
 });
 
 /***/ }),

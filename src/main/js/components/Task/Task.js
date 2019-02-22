@@ -16,9 +16,6 @@ import {
     faCheckSquare
 } from '@fortawesome/free-regular-svg-icons';
 
-// Custom components.
-import { CompleteButton } from '../';
-
 export default function Task(props) {
     const { task, index } = props;
 
@@ -32,9 +29,10 @@ export default function Task(props) {
                 <div
                     className="input-group-prepend"
                 >
-                    <CompleteButton
-                        index={index}
-                        className="edit-button"
+                    <Button
+                        outline
+                        color="success"
+                        className="rounded-0 edit-button"
                     >
                         {task.isComplete ? (
                             <FontAwesomeIcon
@@ -47,7 +45,7 @@ export default function Task(props) {
                                     size="lg"
                                 />
                             )}
-                    </CompleteButton>
+                    </Button>
                 </div>
                 <input
                     type="text"
