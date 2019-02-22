@@ -1,7 +1,13 @@
 import React from 'react';
 
 // Reactstrap components.
-import { Button } from 'reactstrap';
+import {
+    InputGroup,
+    InputGroupAddon,
+    ListGroupItem,
+    Input,
+    Button
+} from 'reactstrap';
 
 // Font Awesome components.
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -20,14 +26,14 @@ export default function Task(props) {
     const { task, index } = props;
 
     return (
-        <li
-            className="list-group-item rounded-0 d-flex p-0 mb-1"
+        <ListGroupItem
+            className="d-flex p-0 mb-1 rounded-0"
         >
-            <div
-                className="input-group input-group-lg"
+            <InputGroup
+                size="lg"
             >
-                <div
-                    className="input-group-prepend"
+                <InputGroupAddon
+                    addonType="prepend"
                 >
                     <Button
                         outline
@@ -46,15 +52,16 @@ export default function Task(props) {
                                 />
                             )}
                     </Button>
-                </div>
-                <input
+                </InputGroupAddon>
+                <Input
                     type="text"
+                    bsSize="lg"
                     id={`input-${index}`}
                     value={task.description}
                     readOnly={!task.isBeingEdited}
-                    className="form-control form-control-lg rounded-0 bg-transparent h-100"
+                    className="rounded-0 bg-transparent h-100"
                 />
-            </div>
+            </InputGroup>
             <div
                 className="d-flex"
             >
@@ -70,8 +77,10 @@ export default function Task(props) {
                         />
                     </Button>
                 )}
-                <button
-                    className="btn btn-outline-warning rounded-0 edit-button"
+                <Button
+                    outline
+                    color="warning"
+                    className="rounded-0 edit-button"
                 >
                     {task.isBeingEdited ? (
                         <FontAwesomeIcon
@@ -84,16 +93,18 @@ export default function Task(props) {
                                 size="lg"
                             />
                         )}
-                </button>
-                <button
-                    className="btn btn-outline-danger rounded-0 edit-button"
+                </Button>
+                <Button
+                    outline
+                    color="danger"
+                    className="rounded-0 edit-button"
                 >
                     <FontAwesomeIcon
                         icon={faTrashAlt}
                         size="lg"
                     />
-                </button>
+                </Button>
             </div>
-        </li>
+        </ListGroupItem>
     );
 };

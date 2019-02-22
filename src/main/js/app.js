@@ -4,6 +4,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import client from './client';
 
+// Reactstrap components.
+import { Container } from 'reactstrap';
+
 // Custom components.
 import {
     AddTaskForm,
@@ -31,7 +34,7 @@ class App extends React.Component {
     render() {
         const { tasks } = this.state;
         return (
-            <div
+            <Container
                 className="app text-center"
             >
                 <header>
@@ -48,7 +51,7 @@ class App extends React.Component {
                     />
                 </main>
                 <footer></footer>
-            </div>
+            </Container>
         )
     }
 }

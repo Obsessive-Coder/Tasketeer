@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+// Reactstrap components.
+import { ListGroup } from 'reactstrap';
+
 // Custom components.
 import { Task } from '../';
 
@@ -15,11 +18,11 @@ class TaskList extends Component {
         ));
 
         return (
-            <ul
-                className="list-group m-5"
+            <ListGroup
+                className="m-5"
             >
                 {taskComponents}
-            </ul>
+            </ListGroup>
         );
     }
 }
