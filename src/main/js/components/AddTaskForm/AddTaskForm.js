@@ -17,12 +17,10 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 export default function AddTaskForm(props) {
-    const { className } = props;
-
     return (
         <Form
             id="new-task-form"
-            className={`w-50 ${className}`}
+            className="w-75 mx-auto"
         >
             <FormGroup>
                 <InputGroup

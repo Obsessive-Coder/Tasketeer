@@ -55502,10 +55502,8 @@ function (_React$Component) {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Container"], {
         className: "app text-center"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("header", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Tasketeer")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("main", {
-        className: "py-5"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components__WEBPACK_IMPORTED_MODULE_4__["AddTaskForm"], {
-        className: "mx-auto"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components__WEBPACK_IMPORTED_MODULE_4__["TaskList"], {
+        className: "py-5 text-center"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components__WEBPACK_IMPORTED_MODULE_4__["AddTaskForm"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components__WEBPACK_IMPORTED_MODULE_4__["TaskList"], {
         tasks: tasks
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("footer", null));
     }
@@ -55575,10 +55573,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function AddTaskForm(props) {
-  var className = props.className;
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Form"], {
     id: "new-task-form",
-    className: "w-50 ".concat(className)
+    className: "w-75 mx-auto"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["FormGroup"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["InputGroup"], {
     size: "lg"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Input"], {
