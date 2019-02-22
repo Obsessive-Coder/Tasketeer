@@ -8,12 +8,11 @@ define(function() {
 		},
 		write: function(obj /*, opts */) {
 			// If this is an Array, extract the self URI and then join using a newline
+			let href = obj._links.self.href;
 			if (obj instanceof Array) {
-				return obj.map(resource => resource._links.self.href).join('\n');
-			} else { // otherwise, just return the self URI
-				return obj._links.self.href;
+				href = obj.map(resource => resource._links.self.href).join('\n');
 			}
+			return href;
 		}
 	};
-
 });

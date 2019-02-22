@@ -41656,14 +41656,15 @@ var __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_RESULT__ = (function ()
     /*, opts */
     ) {
       // If this is an Array, extract the self URI and then join using a newline
+      var href = obj._links.self.href;
+
       if (obj instanceof Array) {
-        return obj.map(function (resource) {
+        href = obj.map(function (resource) {
           return resource._links.self.href;
         }).join('\n');
-      } else {
-        // otherwise, just return the self URI
-        return obj._links.self.href;
       }
+
+      return href;
     }
   };
 }).call(exports, __webpack_require__, exports, module),
@@ -41688,12 +41689,11 @@ var __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_RESULT__ = (function (r
     /*, config, meta */
     ) {
       /* If the URI is a URI Template per RFC 6570 (http://tools.ietf.org/html/rfc6570), trim out the template part */
-      if (_request.path.indexOf('{') === -1) {
-        return _request;
-      } else {
+      if (_request.path.includes('{')) {
         _request.path = _request.path.split('{')[0];
-        return _request;
       }
+
+      return _request;
     }
   });
 }).call(exports, __webpack_require__, exports, module),
@@ -41710,10 +41710,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_RESULT__ = (function (r
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @fortawesome/react-fontawesome */ "./node_modules/@fortawesome/react-fontawesome/index.es.js");
-/* harmony import */ var _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @fortawesome/free-solid-svg-icons */ "./node_modules/@fortawesome/free-solid-svg-icons/index.es.js");
-/* harmony import */ var _fortawesome_free_regular_svg_icons__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @fortawesome/free-regular-svg-icons */ "./node_modules/@fortawesome/free-regular-svg-icons/index.es.js");
- // tag::vars[]
+/* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components */ "./src/main/js/components/index.js");
+
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -41737,12 +41735,10 @@ var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var ReactDOM = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 
-var client = __webpack_require__(/*! ./client */ "./src/main/js/client.js"); // end::vars[]
+var client = __webpack_require__(/*! ./client */ "./src/main/js/client.js"); // Custom components.
 
 
 
-
- // tag::app[]
 
 var App =
 /*#__PURE__*/
@@ -41789,140 +41785,16 @@ function (_React$Component) {
         className: "app text-center"
       }, React.createElement("header", null, React.createElement("h1", null, "Tasketeer")), React.createElement("main", {
         className: "p-5"
-      }, React.createElement(TaskList, {
+      }, React.createElement(_components__WEBPACK_IMPORTED_MODULE_0__["TaskList"], {
         tasks: tasks
       })), React.createElement("footer", null));
     }
   }]);
 
   return App;
-}(React.Component); // end::app[]
-// tag::task-list[]
+}(React.Component);
 
-
-var TaskList =
-/*#__PURE__*/
-function (_React$Component2) {
-  _inherits(TaskList, _React$Component2);
-
-  function TaskList() {
-    _classCallCheck(this, TaskList);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(TaskList).apply(this, arguments));
-  }
-
-  _createClass(TaskList, [{
-    key: "render",
-    value: function render() {
-      var tasks = this.props.tasks;
-      var taskComponents = tasks.map(function (task, index) {
-        return React.createElement(Task, {
-          key: task._links.self.href,
-          index: index,
-          task: task
-        });
-      });
-      return React.createElement("ul", {
-        className: "list-group m-5"
-      }, taskComponents);
-    }
-  }]);
-
-  return TaskList;
-}(React.Component); // end::task-list[]
-// tag::task[]
-
-
-var Task =
-/*#__PURE__*/
-function (_React$Component3) {
-  _inherits(Task, _React$Component3);
-
-  function Task() {
-    _classCallCheck(this, Task);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(Task).apply(this, arguments));
-  }
-
-  _createClass(Task, [{
-    key: "render",
-    value: function render() {
-      var _this$props = this.props,
-          task = _this$props.task,
-          index = _this$props.index;
-      return React.createElement("li", {
-        className: "list-group-item rounded-0 d-flex p-0 mb-1"
-      }, React.createElement("div", {
-        className: "input-group input-group-lg"
-      }, React.createElement("div", {
-        className: "input-group-prepend"
-      }, React.createElement(CompleteButton, {
-        index: index,
-        className: "edit-button"
-      }, task.isComplete ? React.createElement(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_0__["FontAwesomeIcon"], {
-        icon: _fortawesome_free_regular_svg_icons__WEBPACK_IMPORTED_MODULE_2__["faCheckSquare"]
-      }) : React.createElement(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_0__["FontAwesomeIcon"], {
-        icon: _fortawesome_free_regular_svg_icons__WEBPACK_IMPORTED_MODULE_2__["faSquare"]
-      }))), React.createElement("input", {
-        type: "text",
-        id: "input-".concat(index),
-        value: task.description,
-        readOnly: !task.isBeingEdited,
-        className: "form-control form-control-lg rounded-0 bg-transparent h-100"
-      })), React.createElement("div", {
-        className: "d-flex"
-      }, task.isBeingEdited && React.createElement("button", {
-        className: "btn btn-outline-success rounded-0 edit-button"
-      }, React.createElement(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_0__["FontAwesomeIcon"], {
-        icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__["faCheck"]
-      })), React.createElement("button", {
-        className: "btn btn-outline-warning rounded-0 edit-button"
-      }, task.isBeingEdited ? React.createElement(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_0__["FontAwesomeIcon"], {
-        icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__["faTimes"]
-      }) : React.createElement(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_0__["FontAwesomeIcon"], {
-        icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__["faPen"]
-      })), React.createElement("button", {
-        className: "btn btn-outline-danger rounded-0 edit-button"
-      }, React.createElement(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_0__["FontAwesomeIcon"], {
-        icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__["faTrashAlt"]
-      }))));
-    }
-  }]);
-
-  return Task;
-}(React.Component); // end::task[]
-// tag::complete-button[]
-
-
-var CompleteButton =
-/*#__PURE__*/
-function (_React$Component4) {
-  _inherits(CompleteButton, _React$Component4);
-
-  function CompleteButton() {
-    _classCallCheck(this, CompleteButton);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(CompleteButton).apply(this, arguments));
-  }
-
-  _createClass(CompleteButton, [{
-    key: "render",
-    value: function render() {
-      var _this$props2 = this.props,
-          className = _this$props2.className,
-          children = _this$props2.children;
-      return React.createElement("button", {
-        className: "btn btn-outline-success rounded-0 " + className
-      }, children);
-    }
-  }]);
-
-  return CompleteButton;
-}(React.Component); // end::complete-button[]
-// tag::render[]
-
-
-ReactDOM.render(React.createElement(App, null), document.getElementById('react')); // end::render[]
+ReactDOM.render(React.createElement(App, null), document.getElementById('react'));
 
 /***/ }),
 
@@ -41957,6 +41829,246 @@ module.exports = rest.wrap(mime, {
   headers: {
     'Accept': 'application/hal+json'
   }
+});
+
+/***/ }),
+
+/***/ "./src/main/js/components/CompleteButton/CompleteButton.js":
+/*!*****************************************************************!*\
+  !*** ./src/main/js/components/CompleteButton/CompleteButton.js ***!
+  \*****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return CompleteButton; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+function CompleteButton(props) {
+  var className = props.className,
+      children = props.children;
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    className: "btn btn-outline-success rounded-0 " + className
+  }, children);
+}
+;
+
+/***/ }),
+
+/***/ "./src/main/js/components/CompleteButton/index.js":
+/*!********************************************************!*\
+  !*** ./src/main/js/components/CompleteButton/index.js ***!
+  \********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _CompleteButton__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CompleteButton */ "./src/main/js/components/CompleteButton/CompleteButton.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _CompleteButton__WEBPACK_IMPORTED_MODULE_0__["default"]; });
+
+
+
+/***/ }),
+
+/***/ "./src/main/js/components/Task/Task.js":
+/*!*********************************************!*\
+  !*** ./src/main/js/components/Task/Task.js ***!
+  \*********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Task; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @fortawesome/react-fontawesome */ "./node_modules/@fortawesome/react-fontawesome/index.es.js");
+/* harmony import */ var _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @fortawesome/free-solid-svg-icons */ "./node_modules/@fortawesome/free-solid-svg-icons/index.es.js");
+/* harmony import */ var _fortawesome_free_regular_svg_icons__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @fortawesome/free-regular-svg-icons */ "./node_modules/@fortawesome/free-regular-svg-icons/index.es.js");
+/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../ */ "./src/main/js/components/index.js");
+ // Font Awesome components.
+
+
+
+ // Custom components.
+
+
+function Task(props) {
+  var task = props.task,
+      index = props.index;
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+    className: "list-group-item rounded-0 d-flex p-0 mb-1"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "input-group input-group-lg"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "input-group-prepend"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(___WEBPACK_IMPORTED_MODULE_4__["CompleteButton"], {
+    index: index,
+    className: "edit-button"
+  }, task.isComplete ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_1__["FontAwesomeIcon"], {
+    icon: _fortawesome_free_regular_svg_icons__WEBPACK_IMPORTED_MODULE_3__["faCheckSquare"]
+  }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_1__["FontAwesomeIcon"], {
+    icon: _fortawesome_free_regular_svg_icons__WEBPACK_IMPORTED_MODULE_3__["faSquare"]
+  }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    type: "text",
+    id: "input-".concat(index),
+    value: task.description,
+    readOnly: !task.isBeingEdited,
+    className: "form-control form-control-lg rounded-0 bg-transparent h-100"
+  })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "d-flex"
+  }, task.isBeingEdited && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    className: "btn btn-outline-success rounded-0 edit-button"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_1__["FontAwesomeIcon"], {
+    icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__["faCheck"]
+  })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    className: "btn btn-outline-warning rounded-0 edit-button"
+  }, task.isBeingEdited ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_1__["FontAwesomeIcon"], {
+    icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__["faTimes"]
+  }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_1__["FontAwesomeIcon"], {
+    icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__["faPen"]
+  })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    className: "btn btn-outline-danger rounded-0 edit-button"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_1__["FontAwesomeIcon"], {
+    icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__["faTrashAlt"]
+  }))));
+}
+;
+
+/***/ }),
+
+/***/ "./src/main/js/components/Task/index.js":
+/*!**********************************************!*\
+  !*** ./src/main/js/components/Task/index.js ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Task__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Task */ "./src/main/js/components/Task/Task.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _Task__WEBPACK_IMPORTED_MODULE_0__["default"]; });
+
+
+
+/***/ }),
+
+/***/ "./src/main/js/components/TaskList/TaskList.js":
+/*!*****************************************************!*\
+  !*** ./src/main/js/components/TaskList/TaskList.js ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../ */ "./src/main/js/components/index.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+ // Custom components.
+
+
+
+var TaskList =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(TaskList, _Component);
+
+  function TaskList() {
+    _classCallCheck(this, TaskList);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(TaskList).apply(this, arguments));
+  }
+
+  _createClass(TaskList, [{
+    key: "render",
+    value: function render() {
+      var tasks = this.props.tasks;
+      var taskComponents = tasks.map(function (task, index) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(___WEBPACK_IMPORTED_MODULE_1__["Task"], {
+          key: task._links.self.href,
+          idex: index,
+          task: task
+        });
+      });
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+        className: "list-group m-5"
+      }, taskComponents);
+    }
+  }]);
+
+  return TaskList;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+/* harmony default export */ __webpack_exports__["default"] = (TaskList);
+
+/***/ }),
+
+/***/ "./src/main/js/components/TaskList/index.js":
+/*!**************************************************!*\
+  !*** ./src/main/js/components/TaskList/index.js ***!
+  \**************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TaskList__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TaskList */ "./src/main/js/components/TaskList/TaskList.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _TaskList__WEBPACK_IMPORTED_MODULE_0__["default"]; });
+
+
+
+/***/ }),
+
+/***/ "./src/main/js/components/index.js":
+/*!*****************************************!*\
+  !*** ./src/main/js/components/index.js ***!
+  \*****************************************/
+/*! exports provided: TaskList, Task, CompleteButton, default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TaskList__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TaskList */ "./src/main/js/components/TaskList/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TaskList", function() { return _TaskList__WEBPACK_IMPORTED_MODULE_0__["default"]; });
+
+/* harmony import */ var _Task__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Task */ "./src/main/js/components/Task/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Task", function() { return _Task__WEBPACK_IMPORTED_MODULE_1__["default"]; });
+
+/* harmony import */ var _CompleteButton__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CompleteButton */ "./src/main/js/components/CompleteButton/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CompleteButton", function() { return _CompleteButton__WEBPACK_IMPORTED_MODULE_2__["default"]; });
+
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  TaskList: _TaskList__WEBPACK_IMPORTED_MODULE_0__["default"],
+  Task: _Task__WEBPACK_IMPORTED_MODULE_1__["default"],
+  CompleteButton: _CompleteButton__WEBPACK_IMPORTED_MODULE_2__["default"]
 });
 
 /***/ }),
