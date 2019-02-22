@@ -1,5 +1,8 @@
 import React from 'react';
 
+// Reactstrap components.
+import { Button } from 'reactstrap';
+
 // Font Awesome components.
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -58,14 +61,16 @@ export default function Task(props) {
                 className="d-flex"
             >
                 {task.isBeingEdited && (
-                    <button
-                        className="btn btn-outline-success rounded-0 edit-button"
+                    <Button
+                        outline
+                        color="success"
+                        className="rounded-0 edit-button"
                     >
                         <FontAwesomeIcon
                             icon={faCheck}
                             size="lg"
                         />
-                    </button>
+                    </Button>
                 )}
                 <button
                     className="btn btn-outline-warning rounded-0 edit-button"

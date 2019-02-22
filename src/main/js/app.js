@@ -1,8 +1,8 @@
 'use strict';
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const client = require('./client');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import client from './client';
 
 // Custom components.
 import {
@@ -18,10 +18,12 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        client({ method: 'GET', path: '/api/tasks' }).done(response => {
+        client({
+            method: 'GET',
+            path: '/api/tasks'
+        }).done((response) => {
             const tasks = response.entity._embedded.tasks;
             tasks.forEach((task) => (task.isBeingEdited = false));
-            console.log(tasks);
             this.setState({ tasks });
         });
     }

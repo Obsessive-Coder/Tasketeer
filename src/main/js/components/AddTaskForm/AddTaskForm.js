@@ -1,5 +1,15 @@
 import React from 'react';
 
+// Reactstrap components.
+import {
+    Form,
+    FormGroup,
+    InputGroup,
+    InputGroupAddon,
+    Input,
+    Button
+} from 'reactstrap';
+
 // Font Awesome components.
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -10,34 +20,41 @@ export default function AddTaskForm(props) {
     const { className } = props;
 
     return (
-        <form
+        <Form
             id="new-task-form"
             className={`w-50 ${className}`}
         >
-            <div
-                className="input-group input-group-lg"
-            >
-                <input
-                    required
-                    id="task-text"
-                    name="task"
-                    placeholder="Enter a new task"
-                    className="form-control form-control-lg rounded-0"
-                />
-                <div
-                    className="input-group-append"
+            <FormGroup>
+                <InputGroup
+                    size="lg"
                 >
-                    <button
-                        type="submit"
-                        className="btn btn-lg btn-block btn-outline-info rounded-0"
+                    <Input
+                        required
+                        bsSize="lg"
+                        id="task-text"
+                        name="task"
+                        placeholder="Enter a new task"
+                        className="rounded-0"
+                    />
+                    <InputGroupAddon
+                        addonType="append"
                     >
-                        <FontAwesomeIcon
-                            icon={faPlus}
+                        <Button
+                            outline
+                            block
+                            color="info"
                             size="lg"
-                        />
-                    </button>
-                </div>
-            </div>
-        </form>
+                            type="submit"
+                            className="rounded-0 edit-button"
+                        >
+                            <FontAwesomeIcon
+                                icon={faPlus}
+                                size="lg"
+                            />
+                        </Button>
+                    </InputGroupAddon>
+                </InputGroup>
+            </FormGroup>
+        </Form>
     );
 };
