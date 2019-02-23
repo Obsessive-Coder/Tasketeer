@@ -28,16 +28,46 @@ export default function Task(props) {
     const handleEditClick = (e) => {
         task.entity.isBeingEdited = !task.entity.isBeingEdited;
         onEdit(task, index);
+        if (task.entity.isBeingEdited) {
+            document.getElementById(`input-${index}`).focus();
+        }
     };
 
     const handleTaskUpdate = (e) => {
         const input = document.getElementById(`input-${index}`);
         const updatedTask = {
             description: input.value.trim(),
-            isComplete: task.entity.isComplete
+            isComplete: task.entity.isComplete,
+            isBeingEdited: false
         };
 
         onUpdate(task, updatedTask);
+    };
+
+    const handleEditInputKeyUp = (e) => {
+        const { target, keyCode } = e;
+        if (keyCode === 13) {
+            target.blur();
+            return handleTaskUpdate(e);
+        } else if (keyCode === 27) {
+            target.blur();
+            return handleEditClick(e);
+        }
+    };
+
+    const handleEditInputFocusOut = (e) => {
+        const elementsHovered = document.querySelectorAll(':hover');
+        let isCancelClicked = false;
+        for (let i = 0; i < elementsHovered.length; i++) {
+            if (elementsHovered[i].className.includes('edit-button')) {
+                isCancelClicked = true;
+                break;
+            }
+        }
+
+        if (isCancelClicked) return false;
+
+        handleEditClick(e);
     };
 
     return (
@@ -74,7 +104,14 @@ export default function Task(props) {
                     id={`input-${index}`}
                     value={displayText}
                     readOnly={!task.entity.isBeingEdited}
+                    onClick={!task.entity.isBeingEdited ? (
+                        () => handleEditClick(task, index)
+                    ) : (
+                            null
+                        )}
                     onChange={onEditInputChange}
+                    onKeyUp={handleEditInputKeyUp}
+                    onBlur={handleEditInputFocusOut}
                     className="rounded-0 bg-transparent h-100"
                 />
             </InputGroup>

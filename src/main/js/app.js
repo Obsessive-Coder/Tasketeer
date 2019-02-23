@@ -66,7 +66,8 @@ class App extends React.Component {
                 tasks: tasks,
                 attributes: Object.keys(this.schema.properties),
                 pageSize: pageSize,
-                links: this.links
+                links: this.links,
+                editText: ''
             });
         });
     }
@@ -154,6 +155,7 @@ class App extends React.Component {
     }
 
     onUpdateTask(task, updatedTask) {
+        const { editText } = this.state;
         client({
             method: 'PUT',
             path: task.entity._links.self.href,

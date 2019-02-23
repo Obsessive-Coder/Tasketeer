@@ -55530,7 +55530,8 @@ function (_React$Component) {
           tasks: tasks,
           attributes: Object.keys(_this2.schema.properties),
           pageSize: pageSize,
-          links: _this2.links
+          links: _this2.links,
+          editText: ''
         });
       });
     }
@@ -55642,6 +55643,7 @@ function (_React$Component) {
     value: function onUpdateTask(task, updatedTask) {
       var _this6 = this;
 
+      var editText = this.state.editText;
       _client__WEBPACK_IMPORTED_MODULE_3___default()({
         method: 'PUT',
         path: task.entity._links.self.href,
@@ -55833,15 +55835,48 @@ function Task(props) {
   var handleEditClick = function handleEditClick(e) {
     task.entity.isBeingEdited = !task.entity.isBeingEdited;
     onEdit(task, index);
+
+    if (task.entity.isBeingEdited) {
+      document.getElementById("input-".concat(index)).focus();
+    }
   };
 
   var handleTaskUpdate = function handleTaskUpdate(e) {
     var input = document.getElementById("input-".concat(index));
     var updatedTask = {
       description: input.value.trim(),
-      isComplete: task.entity.isComplete
+      isComplete: task.entity.isComplete,
+      isBeingEdited: false
     };
     onUpdate(task, updatedTask);
+  };
+
+  var handleEditInputKeyUp = function handleEditInputKeyUp(e) {
+    var target = e.target,
+        keyCode = e.keyCode;
+
+    if (keyCode === 13) {
+      target.blur();
+      return handleTaskUpdate(e);
+    } else if (keyCode === 27) {
+      target.blur();
+      return handleEditClick(e);
+    }
+  };
+
+  var handleEditInputFocusOut = function handleEditInputFocusOut(e) {
+    var elementsHovered = document.querySelectorAll(':hover');
+    var isCancelClicked = false;
+
+    for (var i = 0; i < elementsHovered.length; i++) {
+      if (elementsHovered[i].className.includes('edit-button')) {
+        isCancelClicked = true;
+        break;
+      }
+    }
+
+    if (isCancelClicked) return false;
+    handleEditClick(e);
   };
 
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["ListGroupItem"], {
@@ -55866,7 +55901,12 @@ function Task(props) {
     id: "input-".concat(index),
     value: displayText,
     readOnly: !task.entity.isBeingEdited,
+    onClick: !task.entity.isBeingEdited ? function () {
+      return handleEditClick(task, index);
+    } : null,
     onChange: onEditInputChange,
+    onKeyUp: handleEditInputKeyUp,
+    onBlur: handleEditInputFocusOut,
     className: "rounded-0 bg-transparent h-100"
   })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "d-flex"
