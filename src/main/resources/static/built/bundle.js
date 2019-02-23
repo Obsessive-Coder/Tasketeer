@@ -55669,21 +55669,41 @@ function (_React$Component) {
     key: "render",
     value: function render() {
       var tasks = this.state.tasks;
+      var incompleteTasks = tasks.filter(function (task) {
+        return !task.entity.isComplete;
+      });
+      var completedTasks = tasks.filter(function (task) {
+        return task.entity.isComplete;
+      });
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_5__["Container"], {
+        fluid: true,
         className: "app text-center"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("header", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Tasketeer")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("main", {
         className: "py-5 text-center"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components__WEBPACK_IMPORTED_MODULE_6__["AddTaskForm"], {
         handleTaskSubmit: this.handleTaskSubmit
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "d-md-flex"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components__WEBPACK_IMPORTED_MODULE_6__["TaskList"], {
+        tasks: incompleteTasks,
+        headingText: "Incomplete Tasks",
+        links: this.state.links,
+        editText: this.state.editText,
+        onTaskDelete: this.handleTaskDelete,
+        onTaskUpdate: this.onUpdateTask,
+        onTaskEdit: this.onTaskEdit,
+        onTaskEditInputChange: this.onTaskEditInputChange,
+        className: "flex-grow-1"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components__WEBPACK_IMPORTED_MODULE_6__["TaskList"], {
-        tasks: tasks,
+        tasks: completedTasks,
+        headingText: "Completed Tasks",
         links: this.state.links,
         editText: this.state.editText,
         onTaskDelete: this.handleTaskDelete,
         onTaskUpdate: this.onUpdateTask,
         onTaskEdit: this.onTaskEdit,
         onTaskEditInputChange: this.onTaskEditInputChange
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("footer", null));
+      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("footer", null));
     }
   }]);
 
@@ -56020,15 +56040,14 @@ function (_Component) {
     value: function render() {
       var _this$props = this.props,
           tasks = _this$props.tasks,
+          headingText = _this$props.headingText,
+          className = _this$props.className,
           editText = _this$props.editText,
           onTaskDelete = _this$props.onTaskDelete,
           onTaskUpdate = _this$props.onTaskUpdate,
           onTaskEdit = _this$props.onTaskEdit,
           onTaskEditInputChange = _this$props.onTaskEditInputChange;
-      var incompleteTasks = tasks.filter(function (task) {
-        return !task.entity.isComplete;
-      });
-      var taskComponents = incompleteTasks.map(function (task, index) {
+      var taskComponents = tasks.map(function (task, index) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(___WEBPACK_IMPORTED_MODULE_2__["Task"], {
           key: index,
           index: index,
@@ -56040,7 +56059,9 @@ function (_Component) {
           onEditInputChange: onTaskEditInputChange
         });
       });
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["ListGroup"], null, taskComponents);
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "mx-3 my-3 ".concat(className)
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, headingText), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["ListGroup"], null, taskComponents));
     }
   }]);
 

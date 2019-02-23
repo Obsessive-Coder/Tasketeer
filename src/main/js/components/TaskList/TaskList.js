@@ -8,11 +8,9 @@ import { Task } from '../';
 
 class TaskList extends Component {
     render() {
-        const { tasks, editText, onTaskDelete, onTaskUpdate, onTaskEdit, onTaskEditInputChange } = this.props;
+        const { tasks, headingText, className, editText, onTaskDelete, onTaskUpdate, onTaskEdit, onTaskEditInputChange } = this.props;
 
-        const incompleteTasks = tasks.filter((task) => !task.entity.isComplete);
-
-        const taskComponents = incompleteTasks.map((task, index) => (
+        const taskComponents = tasks.map((task, index) => (
             <Task
                 key={index}
                 index={index}
@@ -30,9 +28,14 @@ class TaskList extends Component {
         ));
 
         return (
-            <ListGroup>
-                {taskComponents}
-            </ListGroup>
+            <div
+                className={`mx-3 my-3 ${className}`}
+            >
+                <h2>{headingText}</h2>
+                <ListGroup>
+                    {taskComponents}
+                </ListGroup>
+            </div>
         );
     }
 }

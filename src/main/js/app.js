@@ -179,8 +179,11 @@ class App extends React.Component {
 
     render() {
         const { tasks } = this.state;
+        const incompleteTasks = tasks.filter((task) => !task.entity.isComplete);
+        const completedTasks = tasks.filter((task) => task.entity.isComplete);
         return (
             <Container
+                fluid
                 className="app text-center"
             >
                 <header>
@@ -192,15 +195,63 @@ class App extends React.Component {
                     <AddTaskForm
                         handleTaskSubmit={this.handleTaskSubmit}
                     />
-                    <TaskList
-                        tasks={tasks}
-                        links={this.state.links}
-                        editText={this.state.editText}
-                        onTaskDelete={this.handleTaskDelete}
-                        onTaskUpdate={this.onUpdateTask}
-                        onTaskEdit={this.onTaskEdit}
-                        onTaskEditInputChange={this.onTaskEditInputChange}
-                    />
+
+                    {/* <div className="d-flex">
+                        <div className="flex-grow-1">
+                            <TaskList
+                                tasks={incompleteTasks}
+                                headingText="Incomplete Tasks"
+                                links={this.state.links}
+                                editText={this.state.editText}
+                                onTaskDelete={this.handleTaskDelete}
+                                onTaskUpdate={this.onUpdateTask}
+                                onTaskEdit={this.onTaskEdit}
+                                onTaskEditInputChange={this.onTaskEditInputChange}
+                                className="flex-grow-1"
+                            />
+                        </div>
+                        <div>
+                            <TaskList
+                                tasks={completedTasks}
+                                headingText="Completed Tasks"
+                                links={this.state.links}
+                                editText={this.state.editText}
+                                onTaskDelete={this.handleTaskDelete}
+                                onTaskUpdate={this.onUpdateTask}
+                                onTaskEdit={this.onTaskEdit}
+                                onTaskEditInputChange={this.onTaskEditInputChange}
+                                className=""
+                            />
+                        </div>
+                    </div> */}
+
+
+                    <div
+                        className="d-md-flex"
+                    >
+                        <TaskList
+                            tasks={incompleteTasks}
+                            headingText="Incomplete Tasks"
+                            links={this.state.links}
+                            editText={this.state.editText}
+                            onTaskDelete={this.handleTaskDelete}
+                            onTaskUpdate={this.onUpdateTask}
+                            onTaskEdit={this.onTaskEdit}
+                            onTaskEditInputChange={this.onTaskEditInputChange}
+                            className="flex-grow-1"
+                        />
+
+                        <TaskList
+                            tasks={completedTasks}
+                            headingText="Completed Tasks"
+                            links={this.state.links}
+                            editText={this.state.editText}
+                            onTaskDelete={this.handleTaskDelete}
+                            onTaskUpdate={this.onUpdateTask}
+                            onTaskEdit={this.onTaskEdit}
+                            onTaskEditInputChange={this.onTaskEditInputChange}
+                        />
+                    </div>
                 </main>
                 <footer></footer>
             </Container>
