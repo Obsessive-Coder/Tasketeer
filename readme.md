@@ -11,5 +11,5 @@
 </p>
 <br>
 <p aling="center">
-    <img src="https://github.com/Obsessive-Coder/Tasketeer/screenshots/tasketeer.png" width="550" alt="Tasketeer screenshot">
+    <img src="https://raw.githubusercontent.com/Obsessive-Coder/Tasketeer/master/screenshots/tasketeer.png" width="550" alt="Tasketeer screenshot">
 </p>
