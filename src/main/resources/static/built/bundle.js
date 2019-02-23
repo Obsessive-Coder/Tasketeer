@@ -55684,7 +55684,7 @@ function (_React$Component) {
         handleTaskSubmit: this.handleTaskSubmit
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "d-md-flex"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components__WEBPACK_IMPORTED_MODULE_6__["TaskList"], {
+      }, incompleteTasks.length >= 1 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components__WEBPACK_IMPORTED_MODULE_6__["TaskList"], {
         tasks: incompleteTasks,
         headingText: "Incomplete Tasks",
         links: this.state.links,
@@ -55694,7 +55694,9 @@ function (_React$Component) {
         onTaskEdit: this.onTaskEdit,
         onTaskEditInputChange: this.onTaskEditInputChange,
         className: "flex-grow-1"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components__WEBPACK_IMPORTED_MODULE_6__["TaskList"], {
+      }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "m-3 flex-grow-1"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "You don't have any tasks"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Use the form above to add a new task.")), completedTasks.length >= 1 && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components__WEBPACK_IMPORTED_MODULE_6__["TaskList"], {
         tasks: completedTasks,
         headingText: "Completed Tasks",
         links: this.state.links,
@@ -55854,7 +55856,7 @@ function Task(props) {
   var handleCompleteClick = function handleCompleteClick(e) {
     var newTask = {
       description: task.entity.description,
-      isComplete: true,
+      isComplete: !task.entity.isComplete,
       isBeingEdited: false
     };
     onUpdate(task, newTask);
@@ -55944,7 +55946,7 @@ function Task(props) {
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_2__["FontAwesomeIcon"], {
     icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_3__["faCheck"],
     size: "lg"
-  })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+  })), task.entity.isComplete || react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
     outline: true,
     color: "warning",
     onClick: handleEditClick,
@@ -56060,7 +56062,7 @@ function (_Component) {
         });
       });
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "mx-3 my-3 ".concat(className)
+        className: "m-3 ".concat(className)
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, headingText), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["ListGroup"], null, taskComponents));
     }
   }]);

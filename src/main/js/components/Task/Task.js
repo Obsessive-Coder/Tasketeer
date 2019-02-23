@@ -28,7 +28,7 @@ export default function Task(props) {
     const handleCompleteClick = (e) => {
         const newTask = {
             description: task.entity.description,
-            isComplete: true,
+            isComplete: !task.entity.isComplete,
             isBeingEdited: false
         };
 
@@ -135,24 +135,26 @@ export default function Task(props) {
                         />
                     </Button>
                 )}
-                <Button
-                    outline
-                    color="warning"
-                    onClick={handleEditClick}
-                    className="rounded-0 edit-button"
-                >
-                    {task.entity.isBeingEdited ? (
-                        <FontAwesomeIcon
-                            icon={faTimes}
-                            size="lg"
-                        />
-                    ) : (
+                {task.entity.isComplete || (
+                    <Button
+                        outline
+                        color="warning"
+                        onClick={handleEditClick}
+                        className="rounded-0 edit-button"
+                    >
+                        {task.entity.isBeingEdited ? (
                             <FontAwesomeIcon
-                                icon={faPen}
+                                icon={faTimes}
                                 size="lg"
                             />
-                        )}
-                </Button>
+                        ) : (
+                                <FontAwesomeIcon
+                                    icon={faPen}
+                                    size="lg"
+                                />
+                            )}
+                    </Button>
+                )}
                 <Button
                     outline
                     color="danger"

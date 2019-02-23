@@ -229,28 +229,39 @@ class App extends React.Component {
                     <div
                         className="d-md-flex"
                     >
-                        <TaskList
-                            tasks={incompleteTasks}
-                            headingText="Incomplete Tasks"
-                            links={this.state.links}
-                            editText={this.state.editText}
-                            onTaskDelete={this.handleTaskDelete}
-                            onTaskUpdate={this.onUpdateTask}
-                            onTaskEdit={this.onTaskEdit}
-                            onTaskEditInputChange={this.onTaskEditInputChange}
-                            className="flex-grow-1"
-                        />
+                        {incompleteTasks.length >= 1 ? (
+                            <TaskList
+                                tasks={incompleteTasks}
+                                headingText="Incomplete Tasks"
+                                links={this.state.links}
+                                editText={this.state.editText}
+                                onTaskDelete={this.handleTaskDelete}
+                                onTaskUpdate={this.onUpdateTask}
+                                onTaskEdit={this.onTaskEdit}
+                                onTaskEditInputChange={this.onTaskEditInputChange}
+                                className="flex-grow-1"
+                            />
+                        ) : (
+                                <div
+                                    className="m-3 flex-grow-1"
+                                >
+                                    <h2>You don't have any tasks</h2>
+                                    <p>Use the form above to add a new task.</p>
+                                </div>
+                            )}
 
-                        <TaskList
-                            tasks={completedTasks}
-                            headingText="Completed Tasks"
-                            links={this.state.links}
-                            editText={this.state.editText}
-                            onTaskDelete={this.handleTaskDelete}
-                            onTaskUpdate={this.onUpdateTask}
-                            onTaskEdit={this.onTaskEdit}
-                            onTaskEditInputChange={this.onTaskEditInputChange}
-                        />
+                        {completedTasks.length >= 1 && (
+                            <TaskList
+                                tasks={completedTasks}
+                                headingText="Completed Tasks"
+                                links={this.state.links}
+                                editText={this.state.editText}
+                                onTaskDelete={this.handleTaskDelete}
+                                onTaskUpdate={this.onUpdateTask}
+                                onTaskEdit={this.onTaskEdit}
+                                onTaskEditInputChange={this.onTaskEditInputChange}
+                            />
+                        )}
                     </div>
                 </main>
                 <footer></footer>

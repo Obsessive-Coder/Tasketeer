@@ -29,7 +29,7 @@ class TaskList extends Component {
 
         return (
             <div
-                className={`mx-3 my-3 ${className}`}
+                className={`m-3 ${className}`}
             >
                 <h2>{headingText}</h2>
                 <ListGroup>
