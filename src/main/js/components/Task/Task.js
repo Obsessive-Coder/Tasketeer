@@ -23,7 +23,12 @@ import {
 } from '@fortawesome/free-regular-svg-icons';
 
 export default function Task(props) {
-    const { task, index, onDelete, onUpdate } = props;
+    const { task, index, displayText, onDelete, onUpdate, onEdit, onEditInputChange } = props;
+
+    const handleEditClick = (e) => {
+        task.entity.isBeingEdited = !task.entity.isBeingEdited;
+        onEdit(task, index);
+    };
 
     const handleTaskUpdate = (e) => {
         const input = document.getElementById(`input-${index}`);
@@ -67,8 +72,9 @@ export default function Task(props) {
                     type="text"
                     bsSize="lg"
                     id={`input-${index}`}
-                    value={task.entity.description}
+                    value={displayText}
                     readOnly={!task.entity.isBeingEdited}
+                    onChange={onEditInputChange}
                     className="rounded-0 bg-transparent h-100"
                 />
             </InputGroup>
@@ -91,6 +97,7 @@ export default function Task(props) {
                 <Button
                     outline
                     color="warning"
+                    onClick={handleEditClick}
                     className="rounded-0 edit-button"
                 >
                     {task.entity.isBeingEdited ? (

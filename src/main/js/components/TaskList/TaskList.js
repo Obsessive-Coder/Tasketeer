@@ -8,15 +8,21 @@ import { Task } from '../';
 
 class TaskList extends Component {
     render() {
-        const { tasks, onTaskDelete, onTaskUpdate } = this.props;
-        console.log(tasks[0])
+        const { tasks, editText, onTaskDelete, onTaskUpdate, onTaskEdit, onTaskEditInputChange } = this.props;
         const taskComponents = tasks.map((task, index) => (
             <Task
                 key={index}
                 index={index}
                 task={task}
+                displayText={task.entity.isBeingEdited ? (
+                    editText
+                ) : (
+                    task.entity.description
+                )}
                 onDelete={onTaskDelete}
                 onUpdate={onTaskUpdate}
+                onEdit={onTaskEdit}
+                onEditInputChange={onTaskEditInputChange}
             />
         ));
 

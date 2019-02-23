@@ -55480,11 +55480,14 @@ function (_React$Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(App).call(this, props));
     _this.state = {
       tasks: [],
-      links: []
+      links: [],
+      editText: ''
     };
     _this.onNavigate = _this.onNavigate.bind(_assertThisInitialized(_this));
     _this.handleTaskSubmit = _this.handleTaskSubmit.bind(_assertThisInitialized(_this));
     _this.handleTaskDelete = _this.handleTaskDelete.bind(_assertThisInitialized(_this));
+    _this.onTaskEdit = _this.onTaskEdit.bind(_assertThisInitialized(_this));
+    _this.onTaskEditInputChange = _this.onTaskEditInputChange.bind(_assertThisInitialized(_this));
     _this.onCreateTask = _this.onCreateTask.bind(_assertThisInitialized(_this));
     _this.onUpdateTask = _this.onUpdateTask.bind(_assertThisInitialized(_this));
     return _this;
@@ -55583,6 +55586,25 @@ function (_React$Component) {
       });
     }
   }, {
+    key: "onTaskEdit",
+    value: function onTaskEdit(newTask, index) {
+      var tasks = this.state.tasks;
+      var editText = newTask.entity.description;
+      tasks[index] = newTask;
+      this.setState({
+        tasks: tasks,
+        editText: editText
+      });
+    }
+  }, {
+    key: "onTaskEditInputChange",
+    value: function onTaskEditInputChange(e) {
+      var editText = e.target.value;
+      this.setState({
+        editText: editText
+      });
+    }
+  }, {
     key: "onCreateTask",
     value: function onCreateTask(newTask) {
       var _this5 = this;
@@ -55655,8 +55677,11 @@ function (_React$Component) {
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components__WEBPACK_IMPORTED_MODULE_6__["TaskList"], {
         tasks: tasks,
         links: this.state.links,
+        editText: this.state.editText,
         onTaskDelete: this.handleTaskDelete,
-        onTaskUpdate: this.onUpdateTask
+        onTaskUpdate: this.onUpdateTask,
+        onTaskEdit: this.onTaskEdit,
+        onTaskEditInputChange: this.onTaskEditInputChange
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("footer", null));
     }
   }]);
@@ -55799,8 +55824,16 @@ __webpack_require__.r(__webpack_exports__);
 function Task(props) {
   var task = props.task,
       index = props.index,
+      displayText = props.displayText,
       onDelete = props.onDelete,
-      onUpdate = props.onUpdate;
+      onUpdate = props.onUpdate,
+      onEdit = props.onEdit,
+      onEditInputChange = props.onEditInputChange;
+
+  var handleEditClick = function handleEditClick(e) {
+    task.entity.isBeingEdited = !task.entity.isBeingEdited;
+    onEdit(task, index);
+  };
 
   var handleTaskUpdate = function handleTaskUpdate(e) {
     var input = document.getElementById("input-".concat(index));
@@ -55831,8 +55864,9 @@ function Task(props) {
     type: "text",
     bsSize: "lg",
     id: "input-".concat(index),
-    value: task.entity.description,
+    value: displayText,
     readOnly: !task.entity.isBeingEdited,
+    onChange: onEditInputChange,
     className: "rounded-0 bg-transparent h-100"
   })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "d-flex"
@@ -55847,6 +55881,7 @@ function Task(props) {
   })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
     outline: true,
     color: "warning",
+    onClick: handleEditClick,
     className: "rounded-0 edit-button"
   }, task.entity.isBeingEdited ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_2__["FontAwesomeIcon"], {
     icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_3__["faTimes"],
@@ -55939,16 +55974,21 @@ function (_Component) {
     value: function render() {
       var _this$props = this.props,
           tasks = _this$props.tasks,
+          editText = _this$props.editText,
           onTaskDelete = _this$props.onTaskDelete,
-          onTaskUpdate = _this$props.onTaskUpdate;
-      console.log(tasks[0]);
+          onTaskUpdate = _this$props.onTaskUpdate,
+          onTaskEdit = _this$props.onTaskEdit,
+          onTaskEditInputChange = _this$props.onTaskEditInputChange;
       var taskComponents = tasks.map(function (task, index) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(___WEBPACK_IMPORTED_MODULE_2__["Task"], {
           key: index,
           index: index,
           task: task,
+          displayText: task.entity.isBeingEdited ? editText : task.entity.description,
           onDelete: onTaskDelete,
-          onUpdate: onTaskUpdate
+          onUpdate: onTaskUpdate,
+          onEdit: onTaskEdit,
+          onEditInputChange: onTaskEditInputChange
         });
       });
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["ListGroup"], null, taskComponents);

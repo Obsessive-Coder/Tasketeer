@@ -23,10 +23,16 @@ class App extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { tasks: [], links: [] };
+        this.state = {
+            tasks: [],
+            links: [],
+            editText: ''
+        };
         this.onNavigate = this.onNavigate.bind(this);
         this.handleTaskSubmit = this.handleTaskSubmit.bind(this);
         this.handleTaskDelete = this.handleTaskDelete.bind(this);
+        this.onTaskEdit = this.onTaskEdit.bind(this);
+        this.onTaskEditInputChange = this.onTaskEditInputChange.bind(this);
         this.onCreateTask = this.onCreateTask.bind(this);
         this.onUpdateTask = this.onUpdateTask.bind(this);
     }
@@ -66,7 +72,7 @@ class App extends React.Component {
     }
 
     onNavigate(navUri) {
-		client({
+        client({
             method: 'GET',
             path: navUri
         }).then((taskCollection) => {
@@ -80,14 +86,14 @@ class App extends React.Component {
         }).then((taskPromises) => {
             return when.all(taskPromises);
         }).done((tasks) => {
-			this.setState({
-				tasks: tasks,
-				attributes: Object.keys(this.schema.properties),
-				pageSize: this.state.pageSize,
-				links: this.links
-			});
-		});
-	}
+            this.setState({
+                tasks: tasks,
+                attributes: Object.keys(this.schema.properties),
+                pageSize: this.state.pageSize,
+                links: this.links
+            });
+        });
+    }
 
     handleTaskSubmit(e) {
         e.preventDefault();
@@ -109,6 +115,18 @@ class App extends React.Component {
         }).done((result) => {
             this.loadFromServer(this.state.pageSize);
         });
+    }
+
+    onTaskEdit(newTask, index) {
+        const { tasks } = this.state;
+        const editText = newTask.entity.description;
+        tasks[index] = newTask;
+        this.setState({ tasks, editText });
+    }
+
+    onTaskEditInputChange(e) {
+        const editText = e.target.value;
+        this.setState({ editText });
     }
 
     onCreateTask(newTask) {
@@ -147,7 +165,7 @@ class App extends React.Component {
         }).done((result) => {
             this.loadFromServer(this.state.pageSize);
         }, (result) => {
-            if(result.status.code === 412) {
+            if (result.status.code === 412) {
                 alert(`DENIED: Unable to update ${task.entity._links.self.href}. Your copy is stale.`);
             }
         });
@@ -176,8 +194,11 @@ class App extends React.Component {
                     <TaskList
                         tasks={tasks}
                         links={this.state.links}
+                        editText={this.state.editText}
                         onTaskDelete={this.handleTaskDelete}
                         onTaskUpdate={this.onUpdateTask}
+                        onTaskEdit={this.onTaskEdit}
+                        onTaskEditInputChange={this.onTaskEditInputChange}
                     />
                 </main>
                 <footer></footer>
