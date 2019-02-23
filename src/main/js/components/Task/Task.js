@@ -79,7 +79,7 @@ export default function Task(props) {
 
         handleEditClick(e);
     };
-
+    
     return (
         <ListGroupItem
             className="d-flex p-0 mb-1 rounded-0"
