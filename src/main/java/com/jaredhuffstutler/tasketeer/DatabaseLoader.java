@@ -28,7 +28,6 @@ public class DatabaseLoader implements CommandLineRunner {
 	public void run(String... strings) throws Exception {
 		for(int i = 0; i < this.tasks.length; i ++) {
 			this.repository.save(new Task(tasks[i]));
-		}
-		
+		}	
 	}
 }
