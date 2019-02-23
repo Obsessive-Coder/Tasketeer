@@ -55643,7 +55643,6 @@ function (_React$Component) {
     value: function onUpdateTask(task, updatedTask) {
       var _this6 = this;
 
-      var editText = this.state.editText;
       _client__WEBPACK_IMPORTED_MODULE_3___default()({
         method: 'PUT',
         path: task.entity._links.self.href,
@@ -55832,6 +55831,15 @@ function Task(props) {
       onEdit = props.onEdit,
       onEditInputChange = props.onEditInputChange;
 
+  var handleCompleteClick = function handleCompleteClick(e) {
+    var newTask = {
+      description: task.entity.description,
+      isComplete: true,
+      isBeingEdited: false
+    };
+    onUpdate(task, newTask);
+  };
+
   var handleEditClick = function handleEditClick(e) {
     task.entity.isBeingEdited = !task.entity.isBeingEdited;
     onEdit(task, index);
@@ -55888,13 +55896,11 @@ function Task(props) {
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
     outline: true,
     color: "success",
+    onClick: handleCompleteClick,
     className: "rounded-0 edit-button"
-  }, task.entity.isComplete ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_2__["FontAwesomeIcon"], {
-    icon: _fortawesome_free_regular_svg_icons__WEBPACK_IMPORTED_MODULE_4__["faCheckSquare"],
-    size: "lg"
-  }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_2__["FontAwesomeIcon"], {
-    icon: _fortawesome_free_regular_svg_icons__WEBPACK_IMPORTED_MODULE_4__["faSquare"],
-    size: "lg"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_2__["FontAwesomeIcon"], {
+    icon: task.entity.isComplete ? _fortawesome_free_regular_svg_icons__WEBPACK_IMPORTED_MODULE_4__["faCheckSquare"] : _fortawesome_free_regular_svg_icons__WEBPACK_IMPORTED_MODULE_4__["faSquare"],
+    size: "2x"
   }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Input"], {
     type: "text",
     bsSize: "lg",
@@ -56019,7 +56025,10 @@ function (_Component) {
           onTaskUpdate = _this$props.onTaskUpdate,
           onTaskEdit = _this$props.onTaskEdit,
           onTaskEditInputChange = _this$props.onTaskEditInputChange;
-      var taskComponents = tasks.map(function (task, index) {
+      var incompleteTasks = tasks.filter(function (task) {
+        return !task.entity.isComplete;
+      });
+      var taskComponents = incompleteTasks.map(function (task, index) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(___WEBPACK_IMPORTED_MODULE_2__["Task"], {
           key: index,
           index: index,

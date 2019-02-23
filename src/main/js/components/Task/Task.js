@@ -25,6 +25,16 @@ import {
 export default function Task(props) {
     const { task, index, displayText, onDelete, onUpdate, onEdit, onEditInputChange } = props;
 
+    const handleCompleteClick = (e) => {
+        const newTask = {
+            description: task.entity.description,
+            isComplete: true,
+            isBeingEdited: false
+        };
+
+        onUpdate(task, newTask);
+    };
+
     const handleEditClick = (e) => {
         task.entity.isBeingEdited = !task.entity.isBeingEdited;
         onEdit(task, index);
@@ -83,19 +93,13 @@ export default function Task(props) {
                     <Button
                         outline
                         color="success"
+                        onClick={handleCompleteClick}
                         className="rounded-0 edit-button"
                     >
-                        {task.entity.isComplete ? (
-                            <FontAwesomeIcon
-                                icon={faCheckSquare}
-                                size="lg"
-                            />
-                        ) : (
-                                <FontAwesomeIcon
-                                    icon={faSquare}
-                                    size="lg"
-                                />
-                            )}
+                        <FontAwesomeIcon
+                            icon={(task.entity.isComplete ? faCheckSquare : faSquare)}
+                            size="2x"
+                        />
                     </Button>
                 </InputGroupAddon>
                 <Input

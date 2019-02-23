@@ -9,7 +9,10 @@ import { Task } from '../';
 class TaskList extends Component {
     render() {
         const { tasks, editText, onTaskDelete, onTaskUpdate, onTaskEdit, onTaskEditInputChange } = this.props;
-        const taskComponents = tasks.map((task, index) => (
+
+        const incompleteTasks = tasks.filter((task) => !task.entity.isComplete);
+
+        const taskComponents = incompleteTasks.map((task, index) => (
             <Task
                 key={index}
                 index={index}
@@ -17,8 +20,8 @@ class TaskList extends Component {
                 displayText={task.entity.isBeingEdited ? (
                     editText
                 ) : (
-                    task.entity.description
-                )}
+                        task.entity.description
+                    )}
                 onDelete={onTaskDelete}
                 onUpdate={onTaskUpdate}
                 onEdit={onTaskEdit}

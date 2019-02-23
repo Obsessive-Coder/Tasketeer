@@ -155,7 +155,6 @@ class App extends React.Component {
     }
 
     onUpdateTask(task, updatedTask) {
-        const { editText } = this.state;
         client({
             method: 'PUT',
             path: task.entity._links.self.href,
