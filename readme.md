@@ -10,6 +10,6 @@
     A simple Java, Spring Boot, React, and Postgres application for creating and managing tasks.
 </p>
 <br>
-<p aling="center">
+<p align="center">
     <img src="https://raw.githubusercontent.com/Obsessive-Coder/Tasketeer/master/screenshots/tasketeer.png" width="550" alt="Tasketeer screenshot">
 </p>
