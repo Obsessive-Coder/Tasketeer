@@ -2,7 +2,9 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import when from 'when';
 import client from './client';
+import follow from './follow';
 
 // Reactstrap components.
 import { Container } from 'reactstrap';
@@ -13,7 +15,7 @@ import {
     TaskList
 } from './components';
 
-const follow = require('./follow');
+// const follow = require('./follow');
 
 const root = '/api';
 
@@ -21,11 +23,12 @@ class App extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { tasks: [] };
+        this.state = { tasks: [], links: [] };
         this.onNavigate = this.onNavigate.bind(this);
         this.handleTaskSubmit = this.handleTaskSubmit.bind(this);
         this.handleTaskDelete = this.handleTaskDelete.bind(this);
         this.onCreateTask = this.onCreateTask.bind(this);
+        this.onUpdateTask = this.onUpdateTask.bind(this);
     }
 
     loadFromServer(pageSize) {
@@ -39,15 +42,25 @@ class App extends React.Component {
                 headers: { 'Accept': 'application/schema+json' }
             }).then((schema) => {
                 this.schema = schema.entity;
+                this.links = taskCollection.entity._links;
                 return taskCollection;
             });
-        }).done((taskCollection) => {
-            const { entity } = taskCollection;
+        }).then((taskCollection) => {
+            const { tasks } = taskCollection.entity._embedded;
+            return tasks.map((task) => {
+                return client({
+                    method: 'GET',
+                    path: task._links.self.href
+                });
+            });
+        }).then((taskPromises) => {
+            return when.all(taskPromises);
+        }).done((tasks) => {
             this.setState({
-                tasks: entity._embedded.tasks,
+                tasks: tasks,
                 attributes: Object.keys(this.schema.properties),
                 pageSize: pageSize,
-                links: entity._links
+                links: this.links
             });
         });
     }
@@ -56,14 +69,22 @@ class App extends React.Component {
 		client({
             method: 'GET',
             path: navUri
-        }).done((taskCollection) => {
-            const { attributes, pageSize } = this.state;
-            const { entity } = taskCollection;
+        }).then((taskCollection) => {
+            this.links = taskCollection.entity._links;
+            return taskCollection.entity._embedded.tasks.map((task) => {
+                return client({
+                    method: 'GET',
+                    path: task._links.self.href
+                });
+            });
+        }).then((taskPromises) => {
+            return when.all(taskPromises);
+        }).done((tasks) => {
 			this.setState({
-				tasks: entity._embedded.tasks,
-				attributes: attributes,
-				pageSize: pageSize,
-				links: entity._links
+				tasks: tasks,
+				attributes: Object.keys(this.schema.properties),
+				pageSize: this.state.pageSize,
+				links: this.links
 			});
 		});
 	}
@@ -84,24 +105,25 @@ class App extends React.Component {
     handleTaskDelete(task) {
         client({
             method: 'DELETE',
-            path: task._links.self.href
+            path: task.entity._links.self.href
         }).done((result) => {
             this.loadFromServer(this.state.pageSize);
         });
     }
 
     onCreateTask(newTask) {
-        follow(client, root, ['tasks']).then((taskCollection) => {
+        const self = this;
+        follow(client, root, ['tasks']).then((result) => {
             return client({
                 method: 'POST',
-                path: taskCollection.entity._links.self.href,
+                path: result.entity._links.self.href,
                 entity: newTask,
                 headers: { 'Content-Type': 'application/json' }
             });
         }).then((result) => {
             return follow(client, root, [{
                 rel: 'tasks',
-                params: { 'size': this.state.pageSize }
+                params: { 'size': self.state.pageSize }
             }]);
         }).done((result) => {
             const { _links } = result.entity;
@@ -110,6 +132,24 @@ class App extends React.Component {
                 link = _links.last.href;
             }
             this.onNavigate(link);
+        });
+    }
+
+    onUpdateTask(task, updatedTask) {
+        client({
+            method: 'PUT',
+            path: task.entity._links.self.href,
+            entity: updatedTask,
+            headers: {
+                'Content-Type': 'application/json',
+                'If-Match': task.headers.Etag
+            }
+        }).done((result) => {
+            this.loadFromServer(this.state.pageSize);
+        }, (result) => {
+            if(result.status.code === 412) {
+                alert(`DENIED: Unable to update ${task.entity._links.self.href}. Your copy is stale.`);
+            }
         });
     }
 
@@ -135,7 +175,9 @@ class App extends React.Component {
                     />
                     <TaskList
                         tasks={tasks}
+                        links={this.state.links}
                         onTaskDelete={this.handleTaskDelete}
+                        onTaskUpdate={this.onUpdateTask}
                     />
                 </main>
                 <footer></footer>

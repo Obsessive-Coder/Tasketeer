@@ -23,7 +23,17 @@ import {
 } from '@fortawesome/free-regular-svg-icons';
 
 export default function Task(props) {
-    const { task, index, onDelete } = props;
+    const { task, index, onDelete, onUpdate } = props;
+
+    const handleTaskUpdate = (e) => {
+        const input = document.getElementById(`input-${index}`);
+        const updatedTask = {
+            description: input.value.trim(),
+            isComplete: task.entity.isComplete
+        };
+
+        onUpdate(task, updatedTask);
+    };
 
     return (
         <ListGroupItem
@@ -40,7 +50,7 @@ export default function Task(props) {
                         color="success"
                         className="rounded-0 edit-button"
                     >
-                        {task.isComplete ? (
+                        {task.entity.isComplete ? (
                             <FontAwesomeIcon
                                 icon={faCheckSquare}
                                 size="lg"
@@ -57,18 +67,19 @@ export default function Task(props) {
                     type="text"
                     bsSize="lg"
                     id={`input-${index}`}
-                    value={task.description}
-                    readOnly={!task.isBeingEdited}
+                    value={task.entity.description}
+                    readOnly={!task.entity.isBeingEdited}
                     className="rounded-0 bg-transparent h-100"
                 />
             </InputGroup>
             <div
                 className="d-flex"
             >
-                {task.isBeingEdited && (
+                {task.entity.isBeingEdited && (
                     <Button
                         outline
                         color="success"
+                        onClick={handleTaskUpdate}
                         className="rounded-0 edit-button"
                     >
                         <FontAwesomeIcon
@@ -82,7 +93,7 @@ export default function Task(props) {
                     color="warning"
                     className="rounded-0 edit-button"
                 >
-                    {task.isBeingEdited ? (
+                    {task.entity.isBeingEdited ? (
                         <FontAwesomeIcon
                             icon={faTimes}
                             size="lg"

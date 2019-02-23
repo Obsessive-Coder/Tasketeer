@@ -55427,10 +55427,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _client__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./client */ "./src/main/js/client.js");
-/* harmony import */ var _client__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_client__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/es/index.js");
-/* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components */ "./src/main/js/components/index.js");
+/* harmony import */ var when__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! when */ "./node_modules/when/when.js");
+/* harmony import */ var when__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(when__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _client__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./client */ "./src/main/js/client.js");
+/* harmony import */ var _client__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_client__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _follow__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./follow */ "./src/main/js/follow.js");
+/* harmony import */ var _follow__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_follow__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/es/index.js");
+/* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components */ "./src/main/js/components/index.js");
 
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -55453,13 +55457,13 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
+
  // Reactstrap components.
 
  // Custom components.
 
-
-
-var follow = __webpack_require__(/*! ./follow */ "./src/main/js/follow.js");
+ // const follow = require('./follow');
 
 var root = '/api';
 
@@ -55475,12 +55479,14 @@ function (_React$Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(App).call(this, props));
     _this.state = {
-      tasks: []
+      tasks: [],
+      links: []
     };
     _this.onNavigate = _this.onNavigate.bind(_assertThisInitialized(_this));
     _this.handleTaskSubmit = _this.handleTaskSubmit.bind(_assertThisInitialized(_this));
     _this.handleTaskDelete = _this.handleTaskDelete.bind(_assertThisInitialized(_this));
     _this.onCreateTask = _this.onCreateTask.bind(_assertThisInitialized(_this));
+    _this.onUpdateTask = _this.onUpdateTask.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -55489,13 +55495,13 @@ function (_React$Component) {
     value: function loadFromServer(pageSize) {
       var _this2 = this;
 
-      follow(_client__WEBPACK_IMPORTED_MODULE_2___default.a, root, [{
+      _follow__WEBPACK_IMPORTED_MODULE_4___default()(_client__WEBPACK_IMPORTED_MODULE_3___default.a, root, [{
         rel: 'tasks',
         params: {
           size: pageSize
         }
       }]).then(function (taskCollection) {
-        return _client__WEBPACK_IMPORTED_MODULE_2___default()({
+        return _client__WEBPACK_IMPORTED_MODULE_3___default()({
           method: 'GET',
           path: taskCollection.entity._links.profile.href,
           headers: {
@@ -55503,16 +55509,25 @@ function (_React$Component) {
           }
         }).then(function (schema) {
           _this2.schema = schema.entity;
+          _this2.links = taskCollection.entity._links;
           return taskCollection;
         });
-      }).done(function (taskCollection) {
-        var entity = taskCollection.entity;
-
+      }).then(function (taskCollection) {
+        var tasks = taskCollection.entity._embedded.tasks;
+        return tasks.map(function (task) {
+          return _client__WEBPACK_IMPORTED_MODULE_3___default()({
+            method: 'GET',
+            path: task._links.self.href
+          });
+        });
+      }).then(function (taskPromises) {
+        return when__WEBPACK_IMPORTED_MODULE_2___default.a.all(taskPromises);
+      }).done(function (tasks) {
         _this2.setState({
-          tasks: entity._embedded.tasks,
+          tasks: tasks,
           attributes: Object.keys(_this2.schema.properties),
           pageSize: pageSize,
-          links: entity._links
+          links: _this2.links
         });
       });
     }
@@ -55521,20 +55536,25 @@ function (_React$Component) {
     value: function onNavigate(navUri) {
       var _this3 = this;
 
-      _client__WEBPACK_IMPORTED_MODULE_2___default()({
+      _client__WEBPACK_IMPORTED_MODULE_3___default()({
         method: 'GET',
         path: navUri
-      }).done(function (taskCollection) {
-        var _this3$state = _this3.state,
-            attributes = _this3$state.attributes,
-            pageSize = _this3$state.pageSize;
-        var entity = taskCollection.entity;
-
+      }).then(function (taskCollection) {
+        _this3.links = taskCollection.entity._links;
+        return taskCollection.entity._embedded.tasks.map(function (task) {
+          return _client__WEBPACK_IMPORTED_MODULE_3___default()({
+            method: 'GET',
+            path: task._links.self.href
+          });
+        });
+      }).then(function (taskPromises) {
+        return when__WEBPACK_IMPORTED_MODULE_2___default.a.all(taskPromises);
+      }).done(function (tasks) {
         _this3.setState({
-          tasks: entity._embedded.tasks,
-          attributes: attributes,
-          pageSize: pageSize,
-          links: entity._links
+          tasks: tasks,
+          attributes: Object.keys(_this3.schema.properties),
+          pageSize: _this3.state.pageSize,
+          links: _this3.links
         });
       });
     }
@@ -55555,9 +55575,9 @@ function (_React$Component) {
     value: function handleTaskDelete(task) {
       var _this4 = this;
 
-      _client__WEBPACK_IMPORTED_MODULE_2___default()({
+      _client__WEBPACK_IMPORTED_MODULE_3___default()({
         method: 'DELETE',
-        path: task._links.self.href
+        path: task.entity._links.self.href
       }).done(function (result) {
         _this4.loadFromServer(_this4.state.pageSize);
       });
@@ -55567,20 +55587,21 @@ function (_React$Component) {
     value: function onCreateTask(newTask) {
       var _this5 = this;
 
-      follow(_client__WEBPACK_IMPORTED_MODULE_2___default.a, root, ['tasks']).then(function (taskCollection) {
-        return _client__WEBPACK_IMPORTED_MODULE_2___default()({
+      var self = this;
+      _follow__WEBPACK_IMPORTED_MODULE_4___default()(_client__WEBPACK_IMPORTED_MODULE_3___default.a, root, ['tasks']).then(function (result) {
+        return _client__WEBPACK_IMPORTED_MODULE_3___default()({
           method: 'POST',
-          path: taskCollection.entity._links.self.href,
+          path: result.entity._links.self.href,
           entity: newTask,
           headers: {
             'Content-Type': 'application/json'
           }
         });
       }).then(function (result) {
-        return follow(_client__WEBPACK_IMPORTED_MODULE_2___default.a, root, [{
+        return _follow__WEBPACK_IMPORTED_MODULE_4___default()(_client__WEBPACK_IMPORTED_MODULE_3___default.a, root, [{
           rel: 'tasks',
           params: {
-            'size': _this5.state.pageSize
+            'size': self.state.pageSize
           }
         }]);
       }).done(function (result) {
@@ -55595,6 +55616,27 @@ function (_React$Component) {
       });
     }
   }, {
+    key: "onUpdateTask",
+    value: function onUpdateTask(task, updatedTask) {
+      var _this6 = this;
+
+      _client__WEBPACK_IMPORTED_MODULE_3___default()({
+        method: 'PUT',
+        path: task.entity._links.self.href,
+        entity: updatedTask,
+        headers: {
+          'Content-Type': 'application/json',
+          'If-Match': task.headers.Etag
+        }
+      }).done(function (result) {
+        _this6.loadFromServer(_this6.state.pageSize);
+      }, function (result) {
+        if (result.status.code === 412) {
+          alert("DENIED: Unable to update ".concat(task.entity._links.self.href, ". Your copy is stale."));
+        }
+      });
+    }
+  }, {
     key: "componentDidMount",
     value: function componentDidMount() {
       var pageSize = this.state.pageSize;
@@ -55604,15 +55646,17 @@ function (_React$Component) {
     key: "render",
     value: function render() {
       var tasks = this.state.tasks;
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Container"], {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_5__["Container"], {
         className: "app text-center"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("header", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Tasketeer")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("main", {
         className: "py-5 text-center"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components__WEBPACK_IMPORTED_MODULE_4__["AddTaskForm"], {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components__WEBPACK_IMPORTED_MODULE_6__["AddTaskForm"], {
         handleTaskSubmit: this.handleTaskSubmit
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components__WEBPACK_IMPORTED_MODULE_4__["TaskList"], {
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components__WEBPACK_IMPORTED_MODULE_6__["TaskList"], {
         tasks: tasks,
-        onTaskDelete: this.handleTaskDelete
+        links: this.state.links,
+        onTaskDelete: this.handleTaskDelete,
+        onTaskUpdate: this.onUpdateTask
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("footer", null));
     }
   }]);
@@ -55755,7 +55799,18 @@ __webpack_require__.r(__webpack_exports__);
 function Task(props) {
   var task = props.task,
       index = props.index,
-      onDelete = props.onDelete;
+      onDelete = props.onDelete,
+      onUpdate = props.onUpdate;
+
+  var handleTaskUpdate = function handleTaskUpdate(e) {
+    var input = document.getElementById("input-".concat(index));
+    var updatedTask = {
+      description: input.value.trim(),
+      isComplete: task.entity.isComplete
+    };
+    onUpdate(task, updatedTask);
+  };
+
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["ListGroupItem"], {
     className: "d-flex p-0 mb-1 rounded-0"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["InputGroup"], {
@@ -55766,7 +55821,7 @@ function Task(props) {
     outline: true,
     color: "success",
     className: "rounded-0 edit-button"
-  }, task.isComplete ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_2__["FontAwesomeIcon"], {
+  }, task.entity.isComplete ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_2__["FontAwesomeIcon"], {
     icon: _fortawesome_free_regular_svg_icons__WEBPACK_IMPORTED_MODULE_4__["faCheckSquare"],
     size: "lg"
   }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_2__["FontAwesomeIcon"], {
@@ -55776,14 +55831,15 @@ function Task(props) {
     type: "text",
     bsSize: "lg",
     id: "input-".concat(index),
-    value: task.description,
-    readOnly: !task.isBeingEdited,
+    value: task.entity.description,
+    readOnly: !task.entity.isBeingEdited,
     className: "rounded-0 bg-transparent h-100"
   })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "d-flex"
-  }, task.isBeingEdited && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+  }, task.entity.isBeingEdited && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
     outline: true,
     color: "success",
+    onClick: handleTaskUpdate,
     className: "rounded-0 edit-button"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_2__["FontAwesomeIcon"], {
     icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_3__["faCheck"],
@@ -55792,7 +55848,7 @@ function Task(props) {
     outline: true,
     color: "warning",
     className: "rounded-0 edit-button"
-  }, task.isBeingEdited ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_2__["FontAwesomeIcon"], {
+  }, task.entity.isBeingEdited ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_2__["FontAwesomeIcon"], {
     icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_3__["faTimes"],
     size: "lg"
   }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_2__["FontAwesomeIcon"], {
@@ -55883,13 +55939,16 @@ function (_Component) {
     value: function render() {
       var _this$props = this.props,
           tasks = _this$props.tasks,
-          onTaskDelete = _this$props.onTaskDelete;
+          onTaskDelete = _this$props.onTaskDelete,
+          onTaskUpdate = _this$props.onTaskUpdate;
+      console.log(tasks[0]);
       var taskComponents = tasks.map(function (task, index) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(___WEBPACK_IMPORTED_MODULE_2__["Task"], {
-          key: task._links.self.href,
-          idex: index,
+          key: index,
+          index: index,
           task: task,
-          onDelete: onTaskDelete
+          onDelete: onTaskDelete,
+          onUpdate: onTaskUpdate
         });
       });
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["ListGroup"], null, taskComponents);
