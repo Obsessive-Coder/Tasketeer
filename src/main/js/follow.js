@@ -14,27 +14,26 @@ module.exports = function follow(api, rootPath, relArray) {
     }, root);
 
     function traverseNext(root, rel, arrayItem) {
-        return root.then(function (response) {
-            if (hasEmbeddedRel(response.entity, rel)) {
-                return response.entity._embedded[rel];
+        return root.then(function (result) {
+            const { entity } = result;
+            if (hasEmbeddedRel(entity, rel)) {
+                return entity._embedded[rel];
             }
 
-            if(!response.entity._links) {
+            if (!entity._links) {
                 return [];
             }
 
-            if(typeof arrayItem === 'string') {
-                return api({
-                    method: 'GET',
-                    path: response.entity._links[rel].href
-                });
-            } else {
-                return api({
-                    method: 'GET',
-                    path: response.entity._links[rel].href,
-                    params: arrayItem.params
-                })
+            const apiObj = {
+                method: 'GET',
+                path: entity._links[rel].href
+            };
+
+            if (typeof arrayItem !== 'string') {
+                apiObj.params = arrayItem.params
             }
+
+            return api(apiObj);
         });
     }
 

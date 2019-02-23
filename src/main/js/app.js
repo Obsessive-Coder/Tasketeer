@@ -31,26 +31,23 @@ class App extends React.Component {
     loadFromServer(pageSize) {
         follow(client, root, [{
             rel: 'tasks',
-            params: {
-                size: pageSize
-            }
+            params: { size: pageSize }
         }]).then((taskCollection) => {
             return client({
                 method: 'GET',
                 path: taskCollection.entity._links.profile.href,
-                headers: {
-                    'Accept': 'application/schema+json'
-                }
+                headers: { 'Accept': 'application/schema+json' }
             }).then((schema) => {
                 this.schema = schema.entity;
                 return taskCollection;
             });
         }).done((taskCollection) => {
+            const { entity } = taskCollection;
             this.setState({
-                tasks: taskCollection.entity._embedded.tasks,
+                tasks: entity._embedded.tasks,
                 attributes: Object.keys(this.schema.properties),
                 pageSize: pageSize,
-                links: taskCollection.entity._links
+                links: entity._links
             });
         });
     }
@@ -73,21 +70,22 @@ class App extends React.Component {
 
     handleTaskSubmit(e) {
         e.preventDefault();
+        const { target } = e;
         const newTask = {
-            description: e.target.description.value.trim(),
+            description: target.description.value.trim(),
             isComplete: false
         }
 
         this.onCreateTask(newTask);
 
-        e.target.description.value = '';
+        target.description.value = '';
     }
 
     handleTaskDelete(task) {
         client({
             method: 'DELETE',
             path: task._links.self.href
-        }).done((response) => {
+        }).done((result) => {
             this.loadFromServer(this.state.pageSize);
         });
     }
@@ -98,19 +96,15 @@ class App extends React.Component {
                 method: 'POST',
                 path: taskCollection.entity._links.self.href,
                 entity: newTask,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+                headers: { 'Content-Type': 'application/json' }
             });
-        }).then((response) => {
+        }).then((result) => {
             return follow(client, root, [{
                 rel: 'tasks',
-                params: {
-                    'size': this.state.pageSize
-                }
+                params: { 'size': this.state.pageSize }
             }]);
-        }).done((response) => {
-            const { _links } = response.entity;
+        }).done((result) => {
+            const { _links } = result.entity;
             let link = _links.self.href;
             if (typeof _links.last !== 'undefined') {
                 link = _links.last.href;

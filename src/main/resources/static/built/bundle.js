@@ -55506,11 +55506,13 @@ function (_React$Component) {
           return taskCollection;
         });
       }).done(function (taskCollection) {
+        var entity = taskCollection.entity;
+
         _this2.setState({
-          tasks: taskCollection.entity._embedded.tasks,
+          tasks: entity._embedded.tasks,
           attributes: Object.keys(_this2.schema.properties),
           pageSize: pageSize,
-          links: taskCollection.entity._links
+          links: entity._links
         });
       });
     }
@@ -55540,12 +55542,13 @@ function (_React$Component) {
     key: "handleTaskSubmit",
     value: function handleTaskSubmit(e) {
       e.preventDefault();
+      var target = e.target;
       var newTask = {
-        description: e.target.description.value.trim(),
+        description: target.description.value.trim(),
         isComplete: false
       };
       this.onCreateTask(newTask);
-      e.target.description.value = '';
+      target.description.value = '';
     }
   }, {
     key: "handleTaskDelete",
@@ -55555,7 +55558,7 @@ function (_React$Component) {
       _client__WEBPACK_IMPORTED_MODULE_2___default()({
         method: 'DELETE',
         path: task._links.self.href
-      }).done(function (response) {
+      }).done(function (result) {
         _this4.loadFromServer(_this4.state.pageSize);
       });
     }
@@ -55573,15 +55576,15 @@ function (_React$Component) {
             'Content-Type': 'application/json'
           }
         });
-      }).then(function (response) {
+      }).then(function (result) {
         return follow(_client__WEBPACK_IMPORTED_MODULE_2___default.a, root, [{
           rel: 'tasks',
           params: {
             'size': _this5.state.pageSize
           }
         }]);
-      }).done(function (response) {
-        var _links = response.entity._links;
+      }).done(function (result) {
+        var _links = result.entity._links;
         var link = _links.self.href;
 
         if (typeof _links.last !== 'undefined') {
@@ -55966,27 +55969,27 @@ module.exports = function follow(api, rootPath, relArray) {
   }, root);
 
   function traverseNext(root, rel, arrayItem) {
-    return root.then(function (response) {
-      if (hasEmbeddedRel(response.entity, rel)) {
-        return response.entity._embedded[rel];
+    return root.then(function (result) {
+      var entity = result.entity;
+
+      if (hasEmbeddedRel(entity, rel)) {
+        return entity._embedded[rel];
       }
 
-      if (!response.entity._links) {
+      if (!entity._links) {
         return [];
       }
 
-      if (typeof arrayItem === 'string') {
-        return api({
-          method: 'GET',
-          path: response.entity._links[rel].href
-        });
-      } else {
-        return api({
-          method: 'GET',
-          path: response.entity._links[rel].href,
-          params: arrayItem.params
-        });
+      var apiObj = {
+        method: 'GET',
+        path: entity._links[rel].href
+      };
+
+      if (typeof arrayItem !== 'string') {
+        apiObj.params = arrayItem.params;
       }
+
+      return api(apiObj);
     });
   }
 
