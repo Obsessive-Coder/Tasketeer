@@ -29,5 +29,6 @@ public class DatabaseLoader implements CommandLineRunner {
 		for(int i = 0; i < this.tasks.length; i ++) {
 			this.repository.save(new Task(tasks[i]));
 		}
+		
 	}
 }
